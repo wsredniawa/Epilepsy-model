@@ -1,0 +1,82 @@
+objref tVector, vVector,inaVec, ikVec,capVec, lVec,koVec
+tVector = new Vector()	// Time
+vVector = new Vector()	// Voltage
+inaVec = new Vector()
+ikVec = new Vector()
+capVec = new Vector()
+lVec = new Vector()
+koVec = new Vector()
+
+tVector.record(&t)		// Record t
+vVector.record(&soma.v(.5))	// Record v at soma
+inaVec.record(&soma.ina(.5))
+ikVec.record(&soma.ik(.5))
+capVec.record(&soma.i_cap(.5))
+lVec.record(&soma.il_hh2(.5))
+koVec.record(&soma.ko(.5))
+// Codes for saving the data to v.dat
+objref outputFile		// Output File
+outputFile = new File()		// Create file object
+proc save_soma() {	
+	outputFile.wopen("soma_v.txt")					// Open file
+	// Save each point
+	for i=0, tVector.size()-1 {
+		//print(tVector.x(i))
+		outputFile.printf("%g %g %g %g %g %g %g\n",tVector.x(i), vVector.x(i),inaVec.x(i),ikVec.x(i),capVec.x(i),lVec.x(i),koVec.x(i))
+	}
+	//"%g %g\n"
+	outputFile.close()	// Close file
+	print "Save response to file - Done."	// Display Done information
+}
+
+objref taVector, vaVector, iaVec,iakVec, capaVec, laVec, koaVec
+taVector = new Vector()	// Time
+vaVector = new Vector()	// Voltage
+iaVec = new Vector()
+iakVec = new Vector()
+capaVec = new Vector()
+laVec = new Vector()
+koaVec = new Vector()
+
+taVector.record(&t)		// Record t
+vaVector.record(&axon.v(.5))	// Record v at soma
+iaVec.record(&axon.ina(.5))
+iakVec.record(&axon.ik(.5))
+capaVec.record(&axon.i_cap(.5))
+laVec.record(&axon.il_hh2(.5))
+koaVec.record(&axon.ko(.5))
+
+// Codes for saving the data to v.dat
+objref outputFile		// Output File
+outputFile = new File()		// Create file object
+proc save_axon() {	
+	outputFile.wopen("axon_v.txt")					// Open file
+	// Save each point
+	for i=0, taVector.size()-1 {
+		//print(tVector.x(i))
+		outputFile.printf("%g %g %g %g %g %g %g\n",taVector.x(i), vaVector.x(i),iaVec.x(i),iakVec.x(i),capaVec.x(i),laVec.x(i),koaVec.x(i))
+	}
+	outputFile.close()	// Close file
+	print "Save response to file - Done."	// Display Done information
+}
+objref tdVector, vdVector, pasVec, capdVec
+tdVector = new Vector()	// Time
+vdVector = new Vector()	// Voltage
+pasVec = new Vector()
+capdVec = new Vector()
+tdVector.record(&t)		// Record t
+vdVector.record(&dendrite.v(.5))	// Record v at soma
+pasVec.record(&dendrite.i_pas(.5))
+capdVec.record(&dendrite.i_cap(.5))
+objref outputFile		// Output File
+outputFile = new File()		// Create file object
+proc save_dend() {	
+	outputFile.wopen("dend_v.txt")					// Open file
+	// Save each point
+	for i=0, tdVector.size()-1 {
+		//print(tVector.x(i))
+		outputFile.printf("%g %g %g %g\n", tdVector.x(i), vdVector.x(i),pasVec.x(i),capdVec.x(i))
+	}
+	outputFile.close()	// Close file
+	print "Save response to file - Done."	// Display Done information
+}

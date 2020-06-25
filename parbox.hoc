@@ -1,0 +1,116 @@
+//parameters control
+objectvar tempobj
+objectvar vbox
+vbox = new VBox()
+
+
+proc initvalues() {
+
+access soma
+	settaus= txfer_kdifforg
+	setspace = fhspace_kdifforg
+	setbath = difsom_kdifforg
+	setbath2 = difax_kdifforg
+	setdifcs = difc_kdifforg
+	setpumps = totalpump_nakpumpder
+//access dendrite 
+	//setswitch = switch_kdifden
+access axon
+	setsp= fhspace_kdifl
+	settau = kbath_kdifl
+	setspeed = txfer_kdifl
+	setdifc = difc_kdifl
+	setpump = totalpump_nakpumpder
+	setinter = synaxon2.e
+access NetInSP
+	snum = StimTrigger.number
+	sint = StimTrigger.interval
+	noise = StimTrigger.noise
+	}
+proc parameterbox() {
+	// let op verschillende aanroep voor zelfde par's soma & dend
+	xpanel("diffusion Parameters", 0)
+	xlabel("dendrite/soma")
+		//xvalue("dif axon to dendrite","setswitch", 1,"set_switch_kdiff()", 0, 0 )
+		
+		xvalue("dif soma","setbath", 1,"set_bath_kdiff()", 0, 0 )
+		xvalue("dif axon to soma","setbath2", 1,"set_bath2_kdiff()", 0, 0 )
+		xvalue("glia speed","settaus", 1,"set_taus_kdiff()", 0, 0 )
+		xvalue("intracellular space","setspace", 1,"set_space()", 0, 0 )
+		xvalue("glia constant","setdifcs", 1,"set_difcs()", 0, 0 )
+		xvalue("pompa","setpumps", 1,"set_pumps()", 0, 0 )
+	xlabel("axon")
+		xvalue("dif. strength","settau", 1,"set_taugl_kdifl()", 0, 0 )
+		xvalue("glia speed","setspeed", 1,"set_speed_kdifl()", 0, 0 )
+		xvalue("intracellular space","setsp", 1,"set_fhspace_kdifl()", 0, 0 )
+		xvalue("glia constant","setdifc", 1,"set_difc()", 0, 0 )
+		xvalue("pompa","setpump", 1,"set_pump()", 0, 0 )
+		xvalue("inter_inh","setinter", 1,"set_inter()", 0, 0 )
+		//xvalue("gkbar","setgkbar", 1,"set_gkbar()", 0, 0 )
+	xlabel("netstim")
+		xvalue("stimulation number","snum", 1,"set_snum()", 0, 0 )
+		xvalue("stimulation interval","sint", 1,"set_sint()", 0, 0 )
+		xvalue("stimulation noise","noise", 1,"set_noise()", 0, 0 )
+	xpanel()
+}
+proc set_snum() {
+	NetInSP StimTrigger.number = snum	
+}
+proc set_sint() {
+	NetInSP StimTrigger.interval = sint	
+}
+proc set_noise() {
+	NetInSP StimTrigger.noise = noise	
+}
+
+
+proc set_switch_kdiff() {
+	dendrite switch_kdifden =  setswitch
+}
+
+proc set_bath_kdiff() {
+	soma difsom_kdifforg =  setbath
+}
+proc set_bath2_kdiff() {
+	soma difax_kdifforg =  setbath2
+}
+proc set_taus_kdiff() {
+	soma txfer_kdifforg= settaus
+}
+proc set_pumps() {
+	soma totalpump_nakpumpder = setpumps
+}
+proc set_space() {
+	soma fhspace_kdifforg = setspace
+}
+proc set_difcs() {
+	soma difc_kdifforg = setdifcs
+}
+
+
+proc set_fhspace_kdifl() {
+	axon fhspace_kdifl = setsp
+}
+proc set_difc() {
+	axon difc_kdifl = setdifc
+}
+proc set_taugl_kdifl() {
+	axon kbath_kdifl = settau
+}
+proc set_speed_kdifl() {
+	axon txfer_kdifl = setspeed
+}
+proc set_pump() {
+	axon totalpump_nakpumpder = setpump
+}
+proc set_inter() {
+	axon synaxon2.e = setinter
+}
+proc sm() { //startmenu
+	initvalues()
+	vbox.intercept(1)
+	parameterbox()
+	vbox.intercept(0)
+	vbox.map()
+}	
+sm()

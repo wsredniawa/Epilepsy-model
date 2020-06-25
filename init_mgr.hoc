@@ -1,0 +1,94 @@
+load_file("nrngui.hoc")
+
+xopen("createAxon_mgr.hoc")
+
+xopen("createPYCells_mgr.hoc")
+
+// connect the cells together
+
+objref CellConnection, CellConnection2, CellConnection3, CellConnection4, CellConnection5
+
+axon CellConnection = new NetCon(&v(1), syn)
+CellConnection.weight = 0
+
+inter CellConnection2 = new NetCon(&v(.2), synaxon2)
+CellConnection2.weight = 1
+
+//inter CellConnection5 = new NetCon(&v(.3), synaxon3)
+//CellConnection5.weight = 1
+
+inter CellConnection3 = new NetCon(&v(.2), synsoma)
+CellConnection3.weight = 1
+
+soma CellConnection4 = new NetCon(&v(.2), syninter)
+CellConnection4.weight = 1
+
+xopen("addstim_mgr.hoc")
+xopen("parbox.hoc")
+forall {insert extracellular}
+// general simulation settings 
+ko0_k_ion = 3       //To initialize ko to 3 mMM
+ki0_k_ion = 54.4  // To preserve ek
+//celsius = 36
+setpointer soma.kog_kdifforg(0.5), axon.ko(0.5)
+
+finitialize(v_init)
+tstop = 5000
+
+nrncontrolmenu()
+//----------------------------------------------------------------------------
+//  add graphs
+//----------------------------------------------------------------------------
+
+objectvar save_window_, rvp_
+objectvar scene_vector_[5]
+objectvar ocbox_, ocbox_list_, scene_, scene_list_
+{ocbox_list_ = new List()  scene_list_ = new List()}
+{pwman_place(0,0,0)}
+
+{
+save_window_ = new Graph(0)
+save_window_.size(0,tstop,-100,80)
+scene_vector_[3] = save_window_
+{save_window_.view(0, -100, tstop, 180, 1500, 100, 300, 200)}
+graphList[1].append(save_window_)
+save_window_.save_name("graphList[1].")
+//save_window_.addexpr("soma.v", 1, 1, 0.8, 0.9, 2)
+save_window_.addexpr("axon.v", 2, 1, 0.8, 0.9, 2)
+//save_window_.addexpr("dendrite.v(0.5)", 3, 1, 0.8, 0.9, 2)
+save_window_.addexpr("soma.v", 1, 1, 0.8, 0.9, 2)
+save_window_.addexpr("inter.v(0.5)", 4, 1, 0.8, 0.9, 2)
+}
+
+{
+save_window_ = new Graph(0)
+save_window_.size(0,tstop,0,5)
+scene_vector_[2] = save_window_
+{save_window_.view(0, 0, tstop, 5, 1000, 100, 300, 200)}
+graphList[1].append(save_window_)
+save_window_.save_name("graphList[1].")
+//save_window_.addexpr("soma.v", 1, 1, 0.8, 0.9, 2)
+save_window_.addexpr("axon.ko(0.2)", 2, 1, 0.8, 0.9, 2)
+save_window_.addexpr("soma.ko(0.2)", 3, 1, 0.8, 0.9, 2)
+//save_window_.addexpr("dendrite.ko(0.5)", 1, 1, 0.8, 0.9, 2)
+}
+
+{
+save_window_ = new Graph(0)
+save_window_.size(0,tstop,0,1)
+scene_vector_[2] = save_window_
+{save_window_.view(1, 0, tstop, 1, 1000, 500, 300, 200)}
+graphList[1].append(save_window_)
+save_window_.save_name("graphList[1].")
+save_window_.addexpr("axon.i_membrane(0.5)", 2, 1, 0.8, 0.9, 2)
+//save_window_.addexpr("soma.ik(0.5)", 1, 1, 0.8, 0.9, 2)
+}
+/*
+objref cvode
+cvode = new CVode()
+cvode.active(1)
+execute("using_cvode_=1")
+*/
+
+//xopen("save2.hoc")
+//run()

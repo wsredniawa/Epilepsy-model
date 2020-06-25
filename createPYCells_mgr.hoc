@@ -1,0 +1,70 @@
+create soma, inter
+objref syn, syninter, synsoma
+//connect dendrite(0),soma(1)
+	
+access soma
+	soma {
+	/*
+	diam = 10
+	L = 10
+	Ld = 500
+	l = L
+	d = diam
+	pt3dclear()
+	pt3dadd(0, L+Ld, 0, d)
+	pt3dadd(0, Ld, 0, d)
+	*/
+	diam = 100
+	nseg = 1
+	L = 500
+	l = L
+	d = diam
+	pt3dclear()
+	pt3dadd(0, 0, 0, d)
+	pt3dadd(0, -l, 0, d)
+	
+	insert hh
+	//vtraub_hh2 = -65
+	insert nakpumpder
+		totalpump_nakpumpder = 0
+	
+	insert kdifforg
+		fhspace_kdifforg = 30
+		difsom_kdifforg = 0.0001
+		difax_kdifforg = 0.001
+		txfer_kdifforg = 2
+		difc_kdifforg = 2
+	
+	synsoma = new ExpSyn(.2)
+	synsoma.tau = 2
+	synsoma.e = -70
+	
+	syn = new ExpSyn(1)
+	syn.tau = 2
+	syn.e = 0
+	}
+
+access inter
+   
+   inter {
+	diam = 10
+	L = 10
+	Ld = 500
+	//Ra = 35.4
+	insert hh
+	insert nakpumpder
+		totalpump_nakpumpder = 0
+	l = L
+	d = diam
+	pt3dclear()
+	pt3dadd(10, L+Ld, 0, d)
+	pt3dadd(10, Ld, 0, d)
+	
+	syninter = new ExpSyn(.5)
+	syninter.tau = 2
+	syninter.e = 20
+    }
+
+
+
+

@@ -1,0 +1,36 @@
+objref StimTrigger2,StimTrigger,NetInput,Netinter //,StimTrigger2 , NetInput2
+
+create NetInSP
+
+NetInSP {
+  // set coordinates
+  pt3dclear()
+  pt3dadd(-100, 0, -100, 10)
+  pt3dadd(10, 0, -100, 10)
+  
+  // create net stimulation trigger (input to NetCons)
+  StimTrigger = new NetStim(0.5)
+  StimTrigger.start = 200
+  StimTrigger.interval = 200 
+  StimTrigger.number = 10
+  StimTrigger.noise = 0
+  
+  StimTrigger2 = new NetStim(0.5)
+  StimTrigger2.start = 1000
+  StimTrigger2.interval = 200 
+  StimTrigger2.number = 2
+  StimTrigger2.noise = 0
+  // connect to cell in network
+  
+  NetInput = new NetCon(StimTrigger, synaxon)
+  Netinter = new NetCon(StimTrigger2, syn)
+  
+  Netinter.weight = 0
+  //NetInput2 = new NetCon(StimTrigger, neuron.syn)
+  //NetInput2.weight = 0.04
+  NetInput.weight = 1
+}
+objref vec, netcon, nil
+vec = new Vector()
+netcon = new NetCon(StimTrigger, nil)
+netcon.record(vec)

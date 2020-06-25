@@ -1,0 +1,38 @@
+create axon
+objref synaxon, synaxon2, synaxon3
+    axon {
+      diam = 1
+	  nseg = 10
+      L = 1000
+	l = L
+      d = diam
+      pt3dclear()
+      pt3dadd(0, 0, 0, d)
+      pt3dadd(-1000, 0, 0, d)
+   insert hh
+   //insert pas
+	//e_pas = -65
+	synaxon = new ExpSyn(0)
+    synaxon.tau = 0.5
+	synaxon.e = 0
+
+	synaxon2 = new ExpSyn(1)
+    synaxon2.tau = 2
+	synaxon2.e = -80
+	
+	//synaxon3 = new ExpSyn(0.2)
+    //synaxon3.tau = 10
+	//synaxon3.e = -80
+
+	insert nakpumpder
+		totalpump_nakpumpder = 0 
+		//totalpump_nakpumpder = 0.04
+	
+	insert kdifl
+		fhspace_kdifl = 10
+		kbath_kdifl = 0.001
+		txfer_kdifl = 2
+		difc_kdifl = 2
+	// set lattice position of cell
+
+    }

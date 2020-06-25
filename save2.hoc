@@ -1,0 +1,40 @@
+objref iveclist, tobj,Res,savdata,xvec,yvec,zvec,xyzMat, areavec
+iveclist = new List ()
+xvec= new Vector()
+yvec= new Vector()
+zvec= new Vector()
+xyzMat=new Matrix()
+areavec=new Vector()
+ 
+forall for (x,0) {
+    tobj = new Vector()
+    tobj.record(&i_membrane(x))
+    iveclist.append(tobj) // currents will be in mA/cm2
+    areavec.append(area(x)) // areas will be in um2
+    xvec.append(x3d(x))
+	yvec.append(y3d(x))
+	zvec.append(z3d(x))
+  }
+ 
+proc calcCurr() { local i localobj savdata1
+run()
+savdata1 = new File()
+savdata1.wopen("matRecData.txt")
+   i = 0
+  forall for (x,0) {
+      iveclist.o(i).mul(1e-2*areavec.x[i]).printf(savdata1)  // convert (mA/cm2) into (nA)    
+    i+=1
+  }
+  savdata1.close()
+}
+calcCurr() // execute a simulation and postprocess the recorded data
+
+xyzMat.resize(xvec.size(),3)
+xyzMat.setcol(0,xvec)
+xyzMat.setcol(1,yvec)
+xyzMat.setcol(2,zvec)
+
+savdata = new File()
+savdata.wopen("matRecxyz.dat")
+xyzMat.fprint(savdata)
+savdata.close()
