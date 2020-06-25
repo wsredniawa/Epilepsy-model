@@ -13,7 +13,7 @@ from neuronpp.utils.record import Record
 from neuronpp.utils.graphs.network_status_graph import NetworkStatusGraph
 from neuron import h
 from neuronpp.utils.simulation import Simulation
-from mayavi import mlab
+# from mayavi import mlab
 import pylab as py
 import numpy as np 
 
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     lot_cell, axon_recs, axon = LOT(stim, [0.1, 0.1])
     # pop1.record()
     pir_cell, soma, swc, recs  = piriform_cell(stim, .1)
-    fig = vis_3d_nueron(pir_cell)
+    # fig = vis_3d_nueron(pir_cell)
     # h.setpointer(axon.hoc._ref_ko, 'kog', soma.hoc.kdiff2)
     h.setpointer(axon(.5).hoc._ref_ko, 'kog', soma(.5).hoc.kdiff2)
     # Create connectivity graph grouped by populations, with weighs and spike rates updated
@@ -96,13 +96,13 @@ if __name__ == '__main__':
     for i in range(1000):
         sim.run(runtime=2)
         kos = []
-        for i,seg in enumerate(pir_cell.secs): 
-            ko = seg.hoc.psection()['ions']['k']['ko'][0]
-            pts3d = seg.hoc.psection()['morphology']['pts3d']
-            for point in pts3d: kos.append(ko)
-        ms = fig.mlab_source    
-        ms.reset(s=np.array(kos))
-        print(np.array(kos)[0])
+        # for i,seg in enumerate(pir_cell.secs): 
+            # ko = seg.hoc.psection()['ions']['k']['ko'][0]
+            # pts3d = seg.hoc.psection()['morphology']['pts3d']
+            # for point in pts3d: kos.append(ko)
+        # ms = fig.mlab_source    
+        # ms.reset(s=np.array(kos))
+        # print(np.array(kos)[0])
         recs.plot(animate=True, )
         # pir_rec_k.plot(animate=True)
         # pop1.plot(animate=True)
