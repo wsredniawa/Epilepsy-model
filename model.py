@@ -39,7 +39,7 @@ def piriform_cell(source, weights):
     # cell.add_sec("soma", diam=1, l=1000, nseg=1)
     cell.insert("pas")
     cell.insert("hh")
-    cell.insert("kdiff2")
+    cell.insert("kdiff2", 'soma')
     secs = cell.filter_secs("soma")
     syns = cell.add_synapse(source=source, seg=secs(0), 
                             mod_name="Exp2Syn", netcon_weight=weights)
