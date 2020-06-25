@@ -79,13 +79,12 @@ def virtual_points3d(coords, figure=None, scale_factor=None, color=None,
 
 if __name__ == '__main__':
     # Create NetStim
-    stim = NetStimCell("stim").make_netstim(start=21, number=1000, interval=50)
+    stim = NetStimCell("stim").make_netstim(start=21, number=1000, interval=10)
     # Create population 1
     lot_cell, axon_recs, axon = LOT(stim, [0.1, 0.1])
     # pop1.record()
     pir_cell, soma, swc, recs  = piriform_cell(stim, .1)
     # fig = vis_3d_nueron(pir_cell)
-    # h.setpointer(axon.hoc._ref_ko, 'kog', soma.hoc.kdiff2)
     h.setpointer(axon(.5).hoc._ref_ko, 'kog', soma(.5).hoc.kdiff2)
     # Create connectivity graph grouped by populations, with weighs and spike rates updated
     # h.tstop = 80
@@ -103,7 +102,7 @@ if __name__ == '__main__':
         # ms = fig.mlab_source    
         # ms.reset(s=np.array(kos))
         # print(np.array(kos)[0])
-        recs.plot(animate=True, )
+        axon_recs.plot(animate=True, )
         # pir_rec_k.plot(animate=True)
         # pop1.plot(animate=True)
         # pop2.plot(animate=True)

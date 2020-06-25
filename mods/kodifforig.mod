@@ -37,7 +37,7 @@
        SOLVE state METHOD derivimplicit
 	}
     DERIVATIVE state {
-		ko'=(1e6)*(ik)/(fhspace*FARADAY) - difc/(1+pow(txfer,(-1*(ko-15))))-(ko-3)*difsom:+(kog - ko)*difax
+		ko'=(1e6)*(ik)/(fhspace*FARADAY) - difc/(1+pow(txfer,(-1*(ko-15))))-(ko-3)*difsom+(kog - ko)*difax
     }
 :ustawic sigmoide na 15 k2 = 0.0008/(1+exp((ko-15)/-1.09)
 
