@@ -26,7 +26,7 @@ PARAMETER {
 	celsius		(degC)
 	km_k = 2		(mM) 
 	km_na = 10		(mM)
-	totalpump = 1	(mol/cm2)  
+	totalpump = 0.01	(mol/cm2)  
 	: set to 0 in hoc if this pump not wanted
 }
 

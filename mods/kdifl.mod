@@ -14,11 +14,10 @@
     }
 
     PARAMETER {
-	  kbath   =  3 (mM)        : seawater (squid axon!)
-	  fhspace = 300 (angstrom)  : effective thickness of F-H space
-	  txfer   =  50 (ms)  : tau for F-H space <-> bath exchange 
-	  difc = 0.0001
-	  crossdiff=1
+	  kbath   =  0.002 (mM)        : seawater (squid axon!)
+	  fhspace = 50 (angstrom)  : effective thickness of F-H space
+	  txfer   =  2 (ms)  : tau for F-H space <-> bath exchange 
+	  difc = 3
     }
 
     ASSIGNED {

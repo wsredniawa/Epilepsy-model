@@ -13,7 +13,7 @@ from neuronpp.utils.record import Record
 from neuronpp.utils.graphs.network_status_graph import NetworkStatusGraph
 from neuron import h
 from neuronpp.utils.simulation import Simulation
-# from mayavi import mlab
+from mayavi import mlab
 import pylab as py
 import numpy as np 
 
@@ -21,16 +21,20 @@ h.load_file('stdrun.hoc')
 
 def LOT(source, weights):
     cell = Cell(name="lot", compile_paths="mods")
-    cell.add_sec("axon", diam=1, l=1, nseg=1)
-    cell.insert("pas")
+    cell.add_sec("axon", diam=1, l=1000, nseg=10)
+    # cell.insert("pas")
     cell.insert("hh")
-    secs = cell.filter_secs("axon")
+    cell.insert("nakpumpder")
     cell.insert("kdifl")
-    syn1 = cell.add_synapse(source=source, seg=secs(0),
-                            mod_name="ExpSyn", netcon_weight=weights[0])
     axon = cell.filter_secs("axon")
-    recs = Record(axon(0.5), variables='v')
-    return cell, recs, axon
+    for i in axon.hoc: 
+        i.nakpumpder.totalpump = 0.04 
+        i.kdifl.fhspace = 50
+        # i.kdifl.
+    syn1 = cell.add_synapse(source=source, seg=axon(0),
+                            mod_name="ExpSyn", netcon_weight=weights[0])
+    syn1.hoc.tau = 0.5
+    return cell, axon, syn1
 
 def piriform_cell(source, weights):
     cell = Cell(name="pyramidal")
@@ -39,17 +43,17 @@ def piriform_cell(source, weights):
     # cell.add_sec("soma", diam=1, l=1000, nseg=1)
     cell.insert("pas")
     cell.insert("hh")
-    cell.insert("kdiff2", 'soma')
+    #cell.insert("nakpumpder")
+    cell.insert("kdiff2", 'dend[0]')
     secs = cell.filter_secs("soma")
     syns = cell.add_synapse(source=source, seg=secs(0), 
                             mod_name="Exp2Syn", netcon_weight=weights)
     soma = cell.filter_secs("soma")
-    recs = Record(soma(0.5), variables='v')
-    return cell, soma, posswc, recs
+    return cell, soma, posswc
 
 def vis_3d_nueron(pir_cell, csd=np.array([0])):
     mlab.figure(bgcolor=(0.2, 0.2, 0.2), size=(1000, 800))
-    # mlab.points3d(pos[2], pos[3], pos[4], scale_mode='none', scale_factor=3)
+    mlab.points3d(swc[2], swc[3], swc[4], scale_mode='none', scale_factor=3)
     morph_x = []
     morph_y = []
     morph_z = []
@@ -66,7 +70,6 @@ def vis_3d_nueron(pir_cell, csd=np.array([0])):
     fig = mlab.points3d(morph_x,morph_y,morph_z, kos,colormap = 'bwr', 
                         vmax =3.008, vmin=3.005,
                         scale_mode='none', scale_factor=3)
-    return fig
     
 def virtual_points3d(coords, figure=None, scale_factor=None, color=None, 
     name=None):
@@ -78,23 +81,18 @@ def virtual_points3d(coords, figure=None, scale_factor=None, color=None,
                                mode='sphere', figure=figure, color=color, name=name)
 
 if __name__ == '__main__':
-    # Create NetStim
-    stim = NetStimCell("stim").make_netstim(start=21, number=1000, interval=10)
-    # Create population 1
-    lot_cell, axon_recs, axon = LOT(stim, [0.1, 0.1])
-    # pop1.record()
-    pir_cell, soma, swc, recs  = piriform_cell(stim, .1)
-    # fig = vis_3d_nueron(pir_cell)
-    h.setpointer(axon(.5).hoc._ref_ko, 'kog', soma(.5).hoc.kdiff2)
-    # Create connectivity graph grouped by populations, with weighs and spike rates updated
-    # h.tstop = 80
-    # h.run()
-    # axon_recs.plot()
-    # Run
-    sim = Simulation(init_v=-70, warmup=2)
-    for i in range(1000):
-        sim.run(runtime=2)
-        kos = []
+    stim = NetStimCell("stim").make_netstim(start=10, number=1000, interval=200)
+    lot_cell, axon, syn1 = LOT(stim, [1])
+    pir_cell, soma, swc  = piriform_cell(axon(1), 1)
+    dend0 = pir_cell.filter_secs('dend[0]')
+    soma = pir_cell.filter_secs('soma')
+    h.setpointer(axon(.5).hoc._ref_ko, 'kog', dend0(0.5).hoc.kdiff2)
+    # vis_3d_nueron()
+    rec_list = [axon(0.5), dend0(0.5), soma(0.5)]
+    recs_v, recs_ko = Record(rec_list, variables='v'), Record(rec_list, variables='ko')
+    sim = Simulation(init_v=-70, warmup=2, with_neuron_gui=False)
+    for i in range(9000):
+        sim.run(runtime=25, stepsize=25)
         # for i,seg in enumerate(pir_cell.secs): 
             # ko = seg.hoc.psection()['ions']['k']['ko'][0]
             # pts3d = seg.hoc.psection()['morphology']['pts3d']
@@ -102,7 +100,8 @@ if __name__ == '__main__':
         # ms = fig.mlab_source    
         # ms.reset(s=np.array(kos))
         # print(np.array(kos)[0])
-        axon_recs.plot(animate=True, )
+        recs_v.plot(animate=True, y_lim=[-80,60], position='merge')
+        # recs_ko.plot(animate=True, y_lim=[0,15], position='merge')
         # pir_rec_k.plot(animate=True)
         # pop1.plot(animate=True)
         # pop2.plot(animate=True)
